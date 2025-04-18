@@ -9,20 +9,33 @@ pipeline {
     stages {
         stage('Clone Repo') {
             steps {
-                // Specify the correct branch (main)
                 git branch: 'main', url: 'https://github.com/Siva2979/projectca.git'
             }
         }
 
         stage('Install Python & Train Model') {
             steps {
-                sh '''
-                python3 -m venv venv
-                source venv/bin/activate
-                pip install --upgrade pip
-                pip install -r requirements.txt
-                python app/train.py
-                '''
+                script {
+                    if (isUnix()) {
+                        // Unix-based system commands
+                        sh '''
+                        python3 -m venv venv
+                        source venv/bin/activate
+                        pip install --upgrade pip
+                        pip install -r requirements.txt
+                        python app/train.py
+                        '''
+                    } else if (isWindows()) {
+                        // Windows-based system commands
+                        bat '''
+                        python -m venv venv
+                        .\\venv\\Scripts\\activate
+                        pip install --upgrade pip
+                        pip install -r requirements.txt
+                        python app\\train.py
+                        '''
+                    }
+                }
             }
         }
 
@@ -36,17 +49,37 @@ pipeline {
 
         stage('Stop Old Container') {
             steps {
-                sh """
-                docker rm -f ${CONTAINER_NAME} || true
-                """
+                script {
+                    if (isUnix()) {
+                        // Unix-based system command
+                        sh """
+                        docker rm -f ${CONTAINER_NAME} || true
+                        """
+                    } else if (isWindows()) {
+                        // Windows-based system command
+                        bat """
+                        docker rm -f ${CONTAINER_NAME} || true
+                        """
+                    }
+                }
             }
         }
 
         stage('Run Docker Container') {
             steps {
-                sh """
-                docker run -d -p 5000:5000 --name ${CONTAINER_NAME} ${IMAGE_NAME}
-                """
+                script {
+                    if (isUnix()) {
+                        // Unix-based system command
+                        sh """
+                        docker run -d -p 5000:5000 --name ${CONTAINER_NAME} ${IMAGE_NAME}
+                        """
+                    } else if (isWindows()) {
+                        // Windows-based system command
+                        bat """
+                        docker run -d -p 5000:5000 --name ${CONTAINER_NAME} ${IMAGE_NAME}
+                        """
+                    }
+                }
             }
         }
     }
