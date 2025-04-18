@@ -10,7 +10,7 @@ pipeline {
         stage('Clone Repo') {
             steps {
                 git 'https://github.com/Siva2979/projectca.git'
-'
+
             }
         }
 
