@@ -9,8 +9,8 @@ pipeline {
     stages {
         stage('Clone Repo') {
             steps {
-                git 'https://github.com/Siva2979/projectca.git'
-
+                // Specify the correct branch (main)
+                git branch: 'main', url: 'https://github.com/Siva2979/projectca.git'
             }
         }
 
