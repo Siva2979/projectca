@@ -25,7 +25,7 @@ pipeline {
                         pip install -r requirements.txt
                         python app/train.py
                         '''
-                    } else if (isWindows()) {
+                    } else {
                         // Windows-based system commands
                         bat '''
                         python -m venv venv
@@ -55,7 +55,7 @@ pipeline {
                         sh """
                         docker rm -f ${CONTAINER_NAME} || true
                         """
-                    } else if (isWindows()) {
+                    } else {
                         // Windows-based system command
                         bat """
                         docker rm -f ${CONTAINER_NAME} || true
@@ -73,7 +73,7 @@ pipeline {
                         sh """
                         docker run -d -p 5000:5000 --name ${CONTAINER_NAME} ${IMAGE_NAME}
                         """
-                    } else if (isWindows()) {
+                    } else {
                         // Windows-based system command
                         bat """
                         docker run -d -p 5000:5000 --name ${CONTAINER_NAME} ${IMAGE_NAME}
